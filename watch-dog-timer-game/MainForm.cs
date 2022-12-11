@@ -34,10 +34,24 @@ namespace watch_dog_timer_game
             buttonDog.Font = new Font(fontFamily, 12F);
             buttonDog.UseCompatibleTextRendering = true;
             buttonDog.Text = "\uE803";
-            buttonDog.Click += (sender, e) =>
+            buttonDog.Click += kickTheDog;
+        }
+
+        int _count = 0;
+        private void kickTheDog(object? sender, EventArgs e)
+        {
+            var xPos = 
+                _rando.Next(buttonDog.Width, 
+                ClientRectangle.Width - buttonDog.Width);
+            var yPos = 
+                _rando.Next(buttonDog.Height, 
+                ClientRectangle.Height - buttonDog.Height);
+            BeginInvoke(() => 
             {
+                _count++;
                 buttonDog.BackColor = _colors[_rando.Next(0, _colors.Length)];
-            };
+                buttonDog.Location = new Point(xPos, yPos);
+            });
         }
 
         PrivateFontCollection privateFontCollection = new PrivateFontCollection();
@@ -53,5 +67,10 @@ namespace watch_dog_timer_game
             }
             base.Dispose(disposing);
         }
+    }
+
+    class WatchDogTimer
+    {
+
     }
 }
