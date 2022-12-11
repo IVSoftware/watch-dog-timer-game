@@ -10,6 +10,8 @@ namespace watch_dog_timer_game
         {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterScreen;
+            _origPos = buttonDog.Location;
+            _origColor= buttonDog.BackColor;
         }
         WatchDogTimer WatchDog { get; } = new WatchDogTimer();
 
@@ -19,12 +21,16 @@ namespace watch_dog_timer_game
                 .Select(_=>Color.FromKnownColor(_))
                 .ToArray();
         Random _rando = new Random();
+        Point _origPos;
+        Color _origColor;
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             aboutToolStripMenuItem.Click += (sender, e) =>
                 MessageBox.Show(
-                    "* No animals were harmed in the making of this game."
+@"IVSoftware, LLC
+
+* No animals were harmed in the making of this game."
                 );
             this.textBox1.Text = "The mouse has 1 second to kik the dog (again).";
             // For the sake of simplicity, the TTF is copied to output directory...
@@ -60,7 +66,27 @@ namespace watch_dog_timer_game
         private void showMessage()
         {
             buttonDog.Enabled = false;
-            BeginInvoke(() => MessageBox.Show($"You scored {_count}\n Game Over"));
+            BeginInvoke(() =>
+            {
+                if(DialogResult.Yes.Equals(MessageBox.Show(
+                    this,
+$@"You scored {_count}
+
+Play again?",
+                    "Game Over",
+                    MessageBoxButtons.YesNo
+                )))
+                {
+                    _count = 0;
+                    buttonDog.Location = _origPos;
+                    buttonDog.BackColor = _origColor;
+                    buttonDog.Enabled = true;
+                }
+                else
+                {
+                    Application.Exit();
+                }
+            });
         }
 
         PrivateFontCollection privateFontCollection = new PrivateFontCollection();
