@@ -56,7 +56,7 @@ namespace watch_dog_timer_game
                 ClientRectangle.Height - buttonDog.Height);
             BeginInvoke(() => 
             {
-                _count++;
+                Text = $"KikTheDog {++_count}";
                 buttonDog.BackColor = _colors[_rando.Next(0, _colors.Length)];
                 buttonDog.Location = new Point(xPos, yPos);
                 WatchDog.ThrowBone(()=>showMessage());
@@ -77,16 +77,19 @@ Play again?",
                     MessageBoxButtons.YesNo
                 )))
                 {
-                    _count = 0;
-                    buttonDog.Location = _origPos;
-                    buttonDog.BackColor = _origColor;
-                    buttonDog.Enabled = true;
+                    replay();
                 }
-                else
-                {
-                    Application.Exit();
-                }
+                else Application.Exit(); 
             });
+        }
+
+        private void replay()
+        {
+            Text = $"KikTheDog";
+            _count = 0;
+            buttonDog.Location = _origPos;
+            buttonDog.BackColor = _origColor;
+            buttonDog.Enabled = true;
         }
 
         PrivateFontCollection privateFontCollection = new PrivateFontCollection();
