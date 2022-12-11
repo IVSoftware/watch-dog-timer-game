@@ -15,8 +15,8 @@
                 .GetAwaiter()
                 .OnCompleted(() =>
                 {
-                    // If the 'captured' localCount has not changed after waiting 3 seconds
-                    // it indicates that no new selections have been made in that time.        
+                    // If the 'captured' localCount has not changed after awaiting the Interval, 
+                    // it indicates that no new 'bones' have been thrown during that interval.        
                     if (capturedCount.Equals(_wdtCount))
                     {
                         action();
