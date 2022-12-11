@@ -9,12 +9,10 @@ namespace watch_dog_timer_game
         public MainForm()
         {
             InitializeComponent();
-            aboutToolStripMenuItem.Click += (sender, e) =>
-                MessageBox.Show(
-                    "* No animals were harmed in the making of this game."
-                );
-
+            StartPosition = FormStartPosition.CenterScreen;
         }
+        WatchDogTimer WatchDog { get; } = new WatchDogTimer();
+
         Color[] _colors { get; } = 
             Enum.GetValues(typeof(KnownColor))
                 .Cast<KnownColor>()
@@ -24,6 +22,11 @@ namespace watch_dog_timer_game
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            aboutToolStripMenuItem.Click += (sender, e) =>
+                MessageBox.Show(
+                    "* No animals were harmed in the making of this game."
+                );
+            this.textBox1.Text = "The mouse has 1 second to kik the dog (again).";
             // For the sake of simplicity, the TTF is copied to output directory...
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "font", "guidedog.ttf");
 
@@ -36,22 +39,28 @@ namespace watch_dog_timer_game
             buttonDog.Text = "\uE803";
             buttonDog.Click += kickTheDog;
         }
-
         int _count = 0;
         private void kickTheDog(object? sender, EventArgs e)
         {
             var xPos = 
-                _rando.Next(buttonDog.Width, 
+                _rando.Next(2, 
                 ClientRectangle.Width - buttonDog.Width);
             var yPos = 
-                _rando.Next(buttonDog.Height, 
+                _rando.Next(100, 
                 ClientRectangle.Height - buttonDog.Height);
             BeginInvoke(() => 
             {
                 _count++;
                 buttonDog.BackColor = _colors[_rando.Next(0, _colors.Length)];
                 buttonDog.Location = new Point(xPos, yPos);
+                WatchDog.ThrowBone(()=>showMessage());
             });
+        }
+
+        private void showMessage()
+        {
+            buttonDog.Enabled = false;
+            BeginInvoke(() => MessageBox.Show($"You scored {_count}\n Game Over"));
         }
 
         PrivateFontCollection privateFontCollection = new PrivateFontCollection();
@@ -71,6 +80,23 @@ namespace watch_dog_timer_game
 
     class WatchDogTimer
     {
-
+        int _wdtCount = 0;
+        public void ThrowBone(Action action)
+        {
+            _wdtCount++;
+            var capturedCount = _wdtCount;
+            Task
+                .Delay(TimeSpan.FromMilliseconds(1000))
+                .GetAwaiter()
+                .OnCompleted(() =>
+                {
+                    // If the 'captured' localCount has not changed after waiting 3 seconds
+                    // it indicates that no new selections have been made in that time.        
+                    if (capturedCount.Equals(_wdtCount))
+                    {
+                        action();
+                    }
+                });
+        }
     }
 }

@@ -41,7 +41,7 @@
             // 
             // buttonDog
             // 
-            this.buttonDog.Location = new System.Drawing.Point(32, 157);
+            this.buttonDog.Location = new System.Drawing.Point(32, 100);
             this.buttonDog.Name = "buttonDog";
             this.buttonDog.Size = new System.Drawing.Size(75, 75);
             this.buttonDog.TabIndex = 2;
@@ -54,9 +54,9 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(515, 51);
+            this.textBox1.Size = new System.Drawing.Size(515, 43);
             this.textBox1.TabIndex = 4;
-            this.textBox1.Text = "How many times can the mouse kik the dog in 3 seconds?";
+            this.textBox1.TabStop = false;
             // 
             // MainForm
             // 
